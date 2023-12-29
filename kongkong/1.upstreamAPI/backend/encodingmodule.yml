@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: encodingmodule
+  labels:
+    service: encodingmodule
+    project: cms
+spec:
+  type: NodePort
+  selector:
+    service: encodingmodule
+    project: cms
+  ports:
+    - port: 8085
+      targetPort: 8085
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: encodingmodule
+  labels:
+    service: encodingmodule
+    project: cms
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      service: encodingmodule
+      project: cms
+  template:
+    metadata:
+      labels:
+        service: encodingmodule
+        project: cms
+    spec:
+      containers:
+        - name: encodingmodule
+          image: egoomoy/encoding-module:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8085
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-info
+                  key: db-source
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: password
+          volumeMounts:
+            - name: myvod
+              mountPath: /mnt/cms/vod
+      volumes:
+        - name: myvod
+          hostPath: 
+            path: /Users/edwin/next3/files/ourvod

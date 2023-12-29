@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: my-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-test
+  template:
+    metadata:
+      labels:
+        app: nginx-test
+    spec:
+      containers:
+        - name: nginx-test
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx/nginx.conf # mount nginx-conf volumn to /etc/nginx/nginx.conf
+              readOnly: true
+              name: nginx-main-conf-test
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-main-conf-test
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx-my.conf
+                path: nginx.conf

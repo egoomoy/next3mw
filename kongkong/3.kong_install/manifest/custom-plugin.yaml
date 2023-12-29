@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy-kong
+  namespace: kong
+spec:
+  template:
+    spec:
+      containers:
+      - name: proxy
+        env:
+        - name: KONG_PLUGINS
+          value: bundled,custom-auth
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;;"
+        - name: KONG_LOG_LEVEL
+          value: debug
+        volumeMounts:
+        - name: kong-plugin-custom-auth
+          mountPath: /opt/kong/plugins/custom-auth
+      volumes:
+      - name: kong-plugin-custom-auth
+        configMap:
+          name: kong-plugin-custom-auth

@@ -1,0 +1,56 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: custom-auth
+config:
+  auth_host: "authmodule.default" # default namespace의 testapi serveice
+  auth_port: 8080
+  auth_urlpath: "/auth-module/api/v1/role-authorizations/check"
+plugin: custom-auth
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snackbar
+  labels:
+    project: snackbar
+  annotations:
+    konghq.com/plugins: rate-limit, custom-auth
+spec:
+  ingressClassName: kong
+  defaultBackend:
+    service:
+      name: home
+      port:
+        number: 80
+  rules:
+    - http:
+        paths:
+          - pathType: Prefix
+            path: /order
+            backend:
+              service:
+                name: order
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: /payment
+            backend:
+              service:
+                name: payment
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: /auth-module
+            backend:
+              service:
+                name: authmodule
+                port:
+                  number: 8080
+          - pathType: Prefix
+            path: /cms-module
+            backend:
+              service:
+                name: cmsmodule
+                port:
+                  number: 8080
