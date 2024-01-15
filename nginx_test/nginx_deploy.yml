@@ -13,20 +13,26 @@ spec:
       labels:
         app: nginx-test
     spec:
-      containers:
-        - name: nginx-test
-          image: nginx:latest
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - mountPath: /etc/nginx/nginx.conf # mount nginx-conf volumn to /etc/nginx/nginx.conf
-              readOnly: true
-              name: nginx-main-conf-test
-              subPath: nginx.conf
       volumes:
         - name: nginx-main-conf-test
           configMap:
-            name: nginx-conf
+            name: my-nginx-conf
             items:
-              - key: nginx-my.conf
+              - key: nginx-conf
                 path: nginx.conf
+        - name: nginx-hls-vol
+          persistentVolumeClaim:
+            claimName: nginx-hls-pvc
+      containers:
+        - name: nginx-test
+          image: nginx:1.21.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-main-conf-test
+              mountPath: /etc/nginx/nginx.conf # mount nginx-conf volumn to /etc/nginx/nginx.conf
+              readOnly: true
+              subPath: nginx.conf
+            - name: nginx-hls-vol
+              mountPath: /mnt/output

@@ -10,7 +10,7 @@ docker logs 11bc0d34221d
 # 싱글이 아닌 멀티로 카프카를 운영한다면, 3개일 때 1개의 토픽이 3개 노드에 나누어 저장된다.
 # replication-factor 은 토픽의 복제본 갯수를 말한다. 
 # 파티션과 레플리카를 3개 씩 사용한다면 총 9개로 파티션 존재할 것 이다. (3개의 복제본이 3개씩 파티션되어)
-docker exec kafka-kafka-1 kafka-topics --create --topic my-topic2 --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1
+docker exec kafka-kafka-1 kafka-topics --create --topic queuing-encoding-vod --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1
 
 # 카프카 토픽 확인
 docker exec kafka-kafka-1 kafka-topics --describe --topic my-topic --bootstrap-server kafka:9092 

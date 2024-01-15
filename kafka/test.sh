@@ -24,13 +24,23 @@ kubectl exec --tty -i my-release-kafka-client --namespace default -- bash
 # 3. 
 kafka-console-producer.sh \
   --broker-list my-release-kafka-controller-0.my-release-kafka-controller-headless.default.svc.cluster.local:9092,my-release-kafka-controller-1.my-release-kafka-controller-headless.default.svc.cluster.local:9092,my-release-kafka-controller-2.my-release-kafka-controller-headless.default.svc.cluster.local:9092 \
-  --topic my-topic2
+  --topic queuing-encoding-vod
 
 kafka-console-consumer.sh \
   --bootstrap-server my-release-kafka.default.svc.cluster.local:9092 \
-  --topic my-topic2 \
+  --topic queuing-encoding-vod \
   --from-beginning
 
-kafka-topics.sh --describe --topic my-topic2 --bootstrap-server my-release-kafka.default.svc.cluster.local:9092
-kafka-topics.sh --delete --topic my-topic2 --bootstrap-server my-release-kafka.default.svc.cluster.local:9092
-kafka-topics.sh  --create --topic my-topic2 --bootstrap-server my-release-kafka.default.svc.cluster.local:9092 --replication-factor 3 --partitions 3
+kafka-topics.sh --delete --topic queuing-encoding-vod --bootstrap-server my-release-kafka.default.svc.cluster.local:9092
+kafka-topics.sh --create --topic queuing-encoding-vod --bootstrap-server my-release-kafka.default.svc.cluster.local:9092 --replication-factor 3 --partitions 3
+kafka-topics.sh --describe --topic queuing-encoding-vod --bootstrap-server my-release-kafka.default.svc.cluster.local:9092
+
+# 0. 로컬 수행
+
+bin/kafka-server-start.sh config/kraft/server.properties
+bin/kafka-topics.sh --delete --topic queuing-encoding-vod --bootstrap-server localhost:9092
+bin/kafka-topics.sh --create --topic queuing-encoding-vod --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 # 로컬에서 브로커 1개면 레플리카 1개
+bin/kafka-topics.sh --describe --topic queuing-encoding-vod --bootstrap-server localhost:9092 
+
+bin/kafka-topics.sh --create --topic queuing-thumbnail-vod --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 # 로컬에서 브로커 1개면 레플리카 1개
+
