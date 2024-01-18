@@ -24,7 +24,8 @@ kubectl get all -n ever-ns
 # 5. helm
 # 차트 생성해야함.
 
-echo -n 'output/3/mycat_720.m3u8enigma' | openssl md5 -hex
-# http://localhost:8074/hls/85d96431c90d43148837e333f9eaddad/output/3/mycat_720.m3u8
+echo -n 'output/3/cat270.m3u8enigma' | openssl md5 -hex
+# http://localhost:8070/hls/85d96431c90d43148837e333f9eaddad/output/3/mycat_720.m3u8
 # echo -n 'output/3/mycat_720.m3u8enigma' | openssl md5 -hex
 # http://localhost:8071/ts/output/3/mycat_720.m3u8
+# http://localhost:8070/hls/810884c7db52bb23f4424b81b7fbf801/output/3/cat270.m3u8
