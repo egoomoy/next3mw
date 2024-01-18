@@ -30,9 +30,9 @@ echo -n 'output/3/cat270.m3u8mysecret' | openssl md5 -hex
 
 ---
 # secure_link_md5 expression 의 경우
-date -d "today + 1 minutes" +%s
+date -d "today + 10 minutes" +%s
 echo -n "${expires} 127.0.0.1 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d = 
 # 127.0.0.1 을 적용하면 secure_link_md5 에 remote address를 사용해야하는데, 우선 제외 -> 아래로 처리
-echo -n "1705579995 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =
-http://localhost:8070/hls/_nVbU71YeB8DnoBjm9kwow/1705579995/output/3/mycat_720.m3u8
+echo -n "1705582402 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =
+http://localhost:8070/hls/JXp6kfyu7c3rzR58PcZFmw/1705582402/output/3/mycat_720.m3u8
 # if ($secure_link = "0") { return 410; } 만료 시 410 gone       
