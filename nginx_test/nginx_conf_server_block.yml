@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ever-nginx-conf-server-block
+  namespace: ever-ns
+data:
+  nginx-conf: |
+    server {
+      location /hls {
+        secure_link_secret 134798723742;
+        autoindex off;   
+        rewrite ^ /vod;
+      }
+
+      location /vod {
+        # root /mnt;
+        alias /mnt/vod;
+        autoindex off;    # 디렉토리 목록을 표시합니다. 필요에 따라 off로 설정할 수 있습니다.
+      }
+    }

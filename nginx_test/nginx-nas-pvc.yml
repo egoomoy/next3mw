@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nginx-hls-pvc
-  namespace: my-ns
+  name: ever-nginx-nas-pvc
+  namespace: ever-ns
 spec:
-  storageClassName: hls-pv-class
+  storageClassName: ever-nginx-nas-class
   accessModes:
     - ReadWriteOnce
   resources:

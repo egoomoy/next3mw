@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
-  namespace: my-ns
+  name: nginx-test
+  namespace: ever-ns
 spec:
   replicas: 1
   selector:
@@ -10,29 +10,40 @@ spec:
       app: nginx-test
   template:
     metadata:
+      name: nginx-test
       labels:
         app: nginx-test
     spec:
       volumes:
-        - name: nginx-main-conf-test
+        - name: ever-nginx-conf-volume
           configMap:
-            name: my-nginx-conf
+            name: ever-nginx-conf
             items:
               - key: nginx-conf
                 path: nginx.conf
-        - name: nginx-hls-vol
+        - name: ever-nginx-conf-server-block-volume
+          configMap:
+            name: ever-nginx-conf-server-block
+            items:
+              - key: nginx-conf
+                path: server_block.conf  
+        - name: ever-nginx-nas-vol
           persistentVolumeClaim:
-            claimName: nginx-hls-pvc
+            claimName: ever-nginx-nas-pvc
       containers:
         - name: nginx-test
-          image: nginx:1.21.1
+          image: nginx:1.25.3
           imagePullPolicy: Always
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: nginx-main-conf-test
+            - name: ever-nginx-conf-volume
               mountPath: /etc/nginx/nginx.conf # mount nginx-conf volumn to /etc/nginx/nginx.conf
               readOnly: true
               subPath: nginx.conf
-            - name: nginx-hls-vol
-              mountPath: /mnt/output
+            - name: ever-nginx-conf-server-block-volume
+              mountPath: /etc/nginx/conf.d/server_block.conf  
+              readOnly: true
+              subPath: server_block.conf  
+            - name: ever-nginx-nas-vol
+              mountPath: /mnt/
