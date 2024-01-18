@@ -6,23 +6,37 @@ metadata:
 data:
   nginx-conf: |
     server {
+
+
+      # http://localhost:8074/hls/85d96431c90d43148837e333f9eaddad/output/3/mycat_720.m3u8
+      # echo -n 'output/3/mycat_720.m3u8enigma' | openssl md5 -hex
+      # http://localhost:8071/ts/output/3/mycat_720.m3u8
+
       location /hls {
         secure_link_secret enigma;
 
-        # http://localhost:8072/hls/85d96431c90d43148837e333f9eaddad/output/3/mycat_720.m3u8
-        # echo -n 'output/3/mycat_720.m3u8enigma' | openssl md5 -hex
-
-        if ($secure_link = "") {
-          return 403;
-        }
+        # if ($secure_link = "") {
+        #   return 403;
+        # }
 
         autoindex off;   
-        rewrite ^ /vod/$secure_link;
+
+        rewrite /([a-zA-Z0-9_\-]*)/([a-zA-Z0-9_\-]*)/([0-9]*)/(.*)\.(ts)$ /ts/$2/$3/$4.$5 last; 
+        rewrite /([a-zA-Z0-9_\-]*)/([a-zA-Z0-9_\-]*)/([0-9]*)/(.*)\.(m3u8)$ /vod/$secure_link last; 
+        return  404;
+
       }
 
       location /vod {
-        # internal;           # 내부 요청인 걸 확인 (rewrite라서)
+        internal;           # 내부 요청인 걸 확인 (rewrite라서)
         root /mnt;
         autoindex off;      # 디렉토리 목록을 표시합니다. 필요에 따라 off로 설정할 수 있습니다.
       }
+
+      location /ts {
+        internal;           # 내부 요청인 걸 확인 (rewrite라서)
+        alias /mnt/vod;
+        autoindex off;      # 디렉토리 목록을 표시합니다. 필요에 따라 off로 설정할 수 있습니다.
+      }
+      
     }
