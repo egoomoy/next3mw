@@ -8,13 +8,8 @@ data:
     server {
 
       location /hls {
-        secure_link_secret enigma;
-
-        # if ($secure_link = "") {
-        #   return 403;
-        # }
-
         autoindex off;   
+        secure_link_secret enigma;
 
         rewrite /([a-zA-Z0-9_\-]*)/([a-zA-Z0-9_\-]*)/([0-9]*)/(.*)\.(ts)$ /ts/$2/$3/$4.$5 last; 
         rewrite /([a-zA-Z0-9_\-]*)/([a-zA-Z0-9_\-]*)/([0-9]*)/(.*)\.(m3u8)$ /vod/$secure_link last; 
@@ -24,14 +19,16 @@ data:
 
       location /vod {
         internal;           # 내부 요청만 가능하게 (rewrite)
-        root /mnt;
         autoindex off;      # 디렉토리 목록을 표시합니다. 필요에 따라 off로 설정할 수 있습니다.
+        
+        root /mnt;
       }
 
       location /ts {
         internal;           
+        autoindex off;
+
         alias /mnt/vod;
-        autoindex off;      
       }
       
     }
