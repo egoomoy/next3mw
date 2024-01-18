@@ -7,11 +7,6 @@ data:
   nginx-conf: |
     server {
 
-
-      # http://localhost:8074/hls/85d96431c90d43148837e333f9eaddad/output/3/mycat_720.m3u8
-      # echo -n 'output/3/mycat_720.m3u8enigma' | openssl md5 -hex
-      # http://localhost:8071/ts/output/3/mycat_720.m3u8
-
       location /hls {
         secure_link_secret enigma;
 
