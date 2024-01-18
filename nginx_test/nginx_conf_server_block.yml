@@ -7,14 +7,22 @@ data:
   nginx-conf: |
     server {
       location /hls {
-        secure_link_secret 134798723742;
+        secure_link_secret enigma;
+
+        # http://localhost:8072/hls/85d96431c90d43148837e333f9eaddad/output/3/mycat_720.m3u8
+        # echo -n 'output/3/mycat_720.m3u8enigma' | openssl md5 -hex
+
+        if ($secure_link = "") {
+          return 403;
+        }
+
         autoindex off;   
-        rewrite ^ /vod;
+        rewrite ^ /vod/$secure_link;
       }
 
       location /vod {
-        # root /mnt;
-        alias /mnt/vod;
-        autoindex off;    # 디렉토리 목록을 표시합니다. 필요에 따라 off로 설정할 수 있습니다.
+        # internal;           # 내부 요청인 걸 확인 (rewrite라서)
+        root /mnt;
+        autoindex off;      # 디렉토리 목록을 표시합니다. 필요에 따라 off로 설정할 수 있습니다.
       }
     }
