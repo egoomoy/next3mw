@@ -21,11 +21,18 @@ kubectl get pv
 
 kubectl get all -n ever-ns
 
-# 5. helm
-# 차트 생성해야함.
-
+---
+### secure_link_secret word 의 경우
 echo -n 'output/3/cat270.m3u8mysecret' | openssl md5 -hex
 # http://localhost:8070/hls/a87fbb0a9745d780835b8761349671f1/output/3/mycat_720.m3u8
 # echo -n 'output/3/mycat_720.m3u8mysecret' | openssl md5 -hex
 # http://localhost:8071/ts/output/3/mycat_720.m3u8
 # http://localhost:8070/hls/a4603883486fe41f6c13ca8a8b1af737/output/3/cat270.m3u8
+
+---
+# secure_link_md5 expression 의 경우
+date -d "today + 1 minutes" +%s
+echo -n "${expires} 127.0.0.1 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =
+echo -n "1705580393 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =
+http://localhost:8070/hls/0Ft4ijq-CUBfWtfFcgweYg/1705580393/output/3/mycat_720.m3u8
+# if ($secure_link = "0") { return 410; } 만료 시 410 gone       
