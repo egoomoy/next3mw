@@ -19,7 +19,8 @@ data:
         autoindex off;      # 디렉토리 목록을 표시합니다. 필요에 따라 off로 설정할 수 있습니다.
 
         secure_link $arg_token,$arg_expires;
-        secure_link_md5 "$secure_link_expires mysecret";
+        secure_link_md5 "$secure_link_expires &url mysecret";
+        
         if ($secure_link = "") { return 403; }
         if ($secure_link = "0") { return 410; }
 
