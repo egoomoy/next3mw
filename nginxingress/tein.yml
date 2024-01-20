@@ -1,0 +1,26 @@
+# mynginx-ingress.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress-nginx
+spec:
+  ingressClassName: nginx
+  rules:
+  # - host: -> domain이 없는 경우 생략 가능
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontservice
+            port:
+              number: 80
+      - path: /auth-module
+        pathType: Prefix
+        backend:
+          service:
+            name: authmodule
+            port:
+              number: 8080
