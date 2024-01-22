@@ -33,11 +33,8 @@ echo -n 'output/3/cat270.m3u8mysecret' | openssl md5 -hex
 date -d "today + 180 minutes" +%s
 echo -n "${expires} 127.0.0.1 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d = 
 # 127.0.0.1 을 적용하면 secure_link_md5 에 remote address를 사용해야하는데, 우선 제외 -> 아래로 처리
-echo -n "1705923048/vod/output/3/mycat.m3u8 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =
-http://localhost:8072/hls/m9EsRYP1E7t4AubsZD16HQ/1705923048/output/3/mycat.m3u8
-# if ($secure_link = "0") { return 410; } 만료 시 410 gone       
-echo -n "1705923048/vod/output/3/mycat_720.m3u8 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =
-http://localhost:8072/hls/p4O9f9uVRd22uPvI1HPYYw/1705923048/output/3/mycat_720.m3u8
+echo -n "4705941437 /vod/output/3/mycat.m3u8 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =
+http://localhost:8072/hls/SVAl4D05xFIwSqrllgXt3A/4705941437/output/3/mycat.m3u8
 
 # nginx -V 확인
 nginx version: nginx/1.25.3
