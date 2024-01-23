@@ -33,7 +33,6 @@ spec:
       containers:
         - name: nginx-test
           image: nginx:1.21.1
-          imagePullPolicy: Always
           ports:
             - containerPort: 80
           volumeMounts:
