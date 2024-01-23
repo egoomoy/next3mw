@@ -12,7 +12,7 @@ kubectl get po -n ever-ns
 kubectl describe po nginx-test-565bf585d8-l7z75 -n ever-ns
 
 # 3. 포트포워딩 임시 
-kubectl port-forward nginx-test-565bf585d8-l7z75 8072:80 -n ever-ns
+kubectl port-forward nginx-test-6cd8fff686-wmbf9 8072:80 -n ever-ns
 
 # 4. 삭제
 kubectl delete namespace ever-ns       
@@ -34,7 +34,9 @@ date -d "today + 180 minutes" +%s
 echo -n "${expires} 127.0.0.1 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d = 
 # 127.0.0.1 을 적용하면 secure_link_md5 에 remote address를 사용해야하는데, 우선 제외 -> 아래로 처리
 echo -n "4705941437 /vod/output/3/mycat.m3u8 mysecret" | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =
-http://localhost:8072/hls/SVAl4D05xFIwSqrllgXt3A/4705941437/output/3/mycat.m3u8
+http://localhost:8072/vod/output/3/mycat.m3u8?md5=SVAl4D05xFIwSqrllgXt3A&expires=4705941437
+
+
 
 # nginx -V 확인
 nginx version: nginx/1.25.3
