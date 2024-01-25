@@ -32,7 +32,7 @@ spec:
             claimName: ever-nginx-nas-pvc
       containers:
         - name: nginx-test
-          image: nginx:1.21.1
+          image: nginx:1.25.3
           ports:
             - containerPort: 80
           volumeMounts:

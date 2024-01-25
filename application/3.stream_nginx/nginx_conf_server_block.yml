@@ -6,7 +6,6 @@ metadata:
 data:
   nginx-conf: |
     server {
-
       location /vod {
         rewrite /([a-zA-Z0-9_\-]*)/([a-zA-Z0-9_\-]*)/([0-9]*)/(.*)\.(ts)$ /ts/$2/$3/$4.$5 last; # .ts 요청 rewrite
 
@@ -27,5 +26,4 @@ data:
 
         alias /mnt/vod;
       }
-
     }
