@@ -1,45 +1,45 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cmsmodule
+  name: portalmodule
   labels:
-    service: cmsmodule
+    service: portalmodule
     project: snackbar
 spec:
   type: NodePort
   selector:
-    service: cmsmodule
+    service: portalmodule
     project: snackbar
   ports:
-    - port: 8080
-      targetPort: 8083
+    - port: 8082
+      targetPort: 8082
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cmsmodule
+  name: portalmodule
   labels:
-    service: cmsmodule
+    service: portalmodule
     project: snackbar
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: cmsmodule
+      service: portalmodule
       project: snackbar
   template:
     metadata:
       labels:
-        service: cmsmodule
+        service: portalmodule
         project: snackbar
     spec:
       containers:
-        - name: cmsmodule
-          image: egoomoy/cms-module:latest
+        - name: portalmodule
+          image: changsungbeom/portal-module:latest
           imagePullPolicy: Never
           ports:
-            - containerPort: 8083
+            - containerPort: 8082
           # resources:
           #   limits:
           #     memory: "128Mi"
@@ -54,7 +54,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mariadb-secret
-                  key: usernamed
+                  key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:

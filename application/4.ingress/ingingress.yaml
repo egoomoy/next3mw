@@ -24,3 +24,11 @@ spec:
                 name: authmodule
                 port:
                   number: 8080
+
+          - path: /portal-module
+            pathType: Prefix
+            backend:
+              service:
+                name: portalmodule
+                port:
+                  number: 8082
