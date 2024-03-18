@@ -32,3 +32,19 @@ spec:
                 name: portalmodule
                 port:
                   number: 8082
+
+          - path: /cms-module
+            pathType: Prefix
+            backend:
+              service:
+                name: cmsmodule
+                port:
+                  number: 8083
+
+          - path: /file-module
+            pathType: Prefix
+            backend:
+              service:
+                name: filemodule
+                port:
+                  number: 8084
