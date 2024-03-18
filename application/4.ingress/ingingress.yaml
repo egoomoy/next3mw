@@ -4,6 +4,9 @@ metadata:
   name: my-ingress-nginx
   labels:
     project: snackbar
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 3g
+
 spec:
   ingressClassName: nginx
   rules:
