@@ -19,6 +19,8 @@ cd next/mw/kafka_2.13-3.6.0/
 # confluent doc 에 옵션 참고 할 것 ***
 https://docs.confluent.io/kafka-connectors/jdbc/current/sink-connector/sink_config_options.html
 
+http://localhost:8083/connectors?expand=info&expand=status
+
 
 {
     "name": "jdbc_sink_mysql_02",
