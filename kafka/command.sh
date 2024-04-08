@@ -41,3 +41,19 @@ http://localhost:8083/connectors?expand=info&expand=status
         "value.converter": "org.apache.kafka.connect.json.JsonConverter"
     }
 }
+
+{
+    "name" : "encoding-db-testtime-connect",
+    "config" : {
+        "connector.class" : "io.confluent.connect.jdbc.JdbcSourceConnector",
+        "connection.url" : "jdbc:mysql://localhost:3306/encoding",
+        "connection.user":"root",
+        "connection.password":"1234",
+        "mode" : "timestamp+incrementing",
+        "incrementing.column.name" : "id",
+        "timestamp.column.name" : "modified_at",
+        "table.whitelist":"encoding.testtime",
+        "topic.prefix" : "c_encoding_db_topic_",
+        "tasks.max" : "1"
+    }
+}
