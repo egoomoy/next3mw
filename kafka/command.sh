@@ -33,6 +33,8 @@ cd next/mw/kafka_2.13-3.6.0/
 
 
 #7. debezium으로 적용
+# debezium은 mariadb(mysql) 의 binary log를 기반으로 cdc 를 수행한다.
+# 기존에 confluent는 id 와 timestamp를 통해 돌았다
 # mysql --help | grep maria
 # maria bin log 켜주기
 # /usr/local/etc/my.cnf
@@ -87,7 +89,7 @@ http://localhost:8083/connectors?expand=info&expand=status
 }
 
 {
-    "name": "mysql_cdc_oc_source_01",
+    "name": "maria-cdc-test",
     "config": {
         "connector.class": "io.debezium.connector.mysql.MySqlConnector",
         "tasks.max": "1",
@@ -110,12 +112,12 @@ http://localhost:8083/connectors?expand=info&expand=status
         "transforms": "unwrap",
         "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
         "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.delete.handling.mode": "rewrite",
         "transforms.unwrap.add.fields" : "op,table",
         "transforms.unwrap.add.fields.prefix": "cdc_meta_",
         "database.connectionTimeZone": "Asia/Seoul"
     }
 }
-
 
 
 #kafka 설정#
