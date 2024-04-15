@@ -26,9 +26,20 @@ bin/connect-distributed ./etc/kafka/connect-distributed.properties
 
 #6. connect 실행 정상 확인, 관련 토픽 생성 확인
 cd next/mw/kafka_2.13-3.6.0/
-./bin/kafka-topics.sh --create --topic encoding_db_topic_test --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+./bin/kafka-topics.sh --create --topic schemahistory.fullfillment --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
 ./bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
-./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic encoding_db_topic_test --from-beginning
+./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic cdcing.source.encoding.testtime --from-beginning
+./bin/kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic schema.history.fullfillment
+
+
+#7. debezium으로 적용
+# mysql --help | grep maria
+# maria bin log 켜주기
+# /usr/local/etc/my.cnf
+log-bin = /usr/local/Cellar/mariadb/11.3.2/log/binary/maria-bin 
+binlog_cache_size = 1M 
+max_binlog_size = 512M
+expire_logs_days = 7
 
 
 
@@ -74,6 +85,37 @@ http://localhost:8083/connectors?expand=info&expand=status
         "tasks.max" : "1"
     }
 }
+
+{
+    "name": "mysql_cdc_oc_source_01",
+    "config": {
+        "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+        "tasks.max": "1",
+        "database.hostname": "localhost",
+        "database.port": "3306",
+        "database.user": "root",
+        "database.password": "1234",
+        "database.server.id": "1",
+        "database.server.name": "mysql01",
+        "database.include.list": "encoding",
+        "table.include.list": "encoding.testtime",
+        "database.ssl.mode":"disabled",
+        "schema.history.internal.kafka.bootstrap.servers": "localhost:9092", 
+        "schema.history.internal.kafka.topic": "schema.history.fullfillment", 
+        "include.schema.changes": "true" ,
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "snapshot.mode": "schema_only_recovery",
+        "topic.prefix" : "cdcing.source",
+        "transforms": "unwrap",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.add.fields" : "op,table",
+        "transforms.unwrap.add.fields.prefix": "cdc_meta_",
+        "database.connectionTimeZone": "Asia/Seoul"
+    }
+}
+
 
 
 #kafka 설정#
