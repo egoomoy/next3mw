@@ -148,12 +148,40 @@ https://docs.confluent.io/kafka-connectors/elasticsearch/current/configuration_o
 
 
 
+# topic에 상태는 전달하되, 추가필드 op,tables,__deleted는 제외하고싶을때.
+{
+    "name": "search-cms",
+    "config": {
+        "connector.class" : "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "connection.url" : "jdbc:mysql://localhost:3306/search",
+        "connection.user":"root",
+        "connection.password":"1234",
+        "auto.create": "false",
+        "auto.evolve": "false",
+        "topics": "cdc.test.cms.content",
+        "insert.mode": "upsert",
+        "pk.mode": "record_value",
+        "pk.fields": "content_no",
+        "table.name.format":"search.content",
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "transforms": "unwrap,dropFields",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.delete.handling.mode": "rewrite",
+        "transforms.unwrap.add.fields" : "op,table",
+        "transforms.unwrap.add.fields.prefix": "testcdc_",
+        "transforms.dropFields.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+        "transforms.dropFields.exclude": "testcdc_op,testcdc_table,__deleted"
+        }
+}
 
 
 # CDC의 CMS의 5가지 테이블을 한토픽으로 전달하고싶을때 #
-# route설정을 해줘야함
+# 근데 mv와 target은 db to db가 맞는듯.
+
+# kakfa_topic을 Db 하나하나해야함, 통쨰로해야함? 통째로라면 아래 route설정을 해줘야함
 # 그렇지 않고 테이블 리스트만 명시해준다면, 변화된 테이블수 만큼 토픽이 발행됨.
-# 관리 포인트를 줄이기 위해 route설정을 주고 한번에 관리하는게 효율적인거같음.
 
 {
     "name": "testcdc",
