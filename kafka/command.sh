@@ -76,7 +76,7 @@ http://localhost:8083/connectors?expand=info&expand=status
     "name" : "encoding-db-testtime-connect",
     "config" : {
         "connector.class" : "io.confluent.connect.jdbc.JdbcSourceConnector",
-        "connection.url" : "jdbc:mysql://localhost:3306/encoding",
+        "connection.url" : "jdbc:mysql://localhost:3306/encoding",ㄴㄴ..
         "connection.user":"root",
         "connection.password":"1234",
         "mode" : "timestamp+incrementing",
@@ -143,4 +143,47 @@ https://docs.confluent.io/kafka-connectors/elasticsearch/current/configuration_o
     "transforms.extractInt.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
     "transforms.extractInt.field": "content_no" 
   }
+}
+
+
+
+
+
+
+# CDC의 CMS의 5가지 테이블을 한토픽으로 전달하고싶을때 #
+# route설정을 해줘야함
+# 그렇지 않고 테이블 리스트만 명시해준다면, 변화된 테이블수 만큼 토픽이 발행됨.
+# 관리 포인트를 줄이기 위해 route설정을 주고 한번에 관리하는게 효율적인거같음.
+
+{
+    "name": "testcdc",
+    "config": {
+        "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+        "tasks.max": "1",
+        "database.hostname": "localhost",
+        "database.port": "3306",
+        "database.user": "root",
+        "database.password": "1234",
+        "database.server.id": "1",
+        "database.server.name": "cdc",
+        "database.include.list": "cms",
+        "table.include.list": "cms.content,cms.content_to_chapter,cms.chapter_to_kit,cms.kit,cms.chapter",
+        "database.ssl.mode":"disabled",
+        "schema.history.internal.kafka.bootstrap.servers": "localhost:9092", 
+        "schema.history.internal.kafka.topic": "schema.history.fullfillment", 
+        "include.schema.changes": "true" ,
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "topic.prefix" : "cdc.test",
+        "transforms": "unwrap,route",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.delete.handling.mode": "rewrite",
+        "transforms.unwrap.add.fields" : "op,table",
+        "transforms.unwrap.add.fields.prefix": "testcdc_",
+        "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+        "transforms.route.regex": "cdc.test.(.*)",
+        "transforms.route.replacement": "cdc.test.all_tables",
+        "database.connectionTimeZone": "Asia/Seoul"
+    }
 }
