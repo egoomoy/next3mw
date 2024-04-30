@@ -53,7 +53,7 @@ kubectl delete all -l app=mariadb
 # etc
 kubectl get pods -l app=mariadb
 kubectl exec -it mariadb-c5bd659b8-g9zkm -- bash
-kubectl port-forward  mariadb-c5bd659b8-l5p88 3307:3306
+kubectl port-forward  mariadb-c5bd659b8-xqbsk 3307:3306
 kubectl port-forward  encodingmodule-94bb849cd-845d5 8085:8085
 kubectl port-forward  my-release-kafka-controller-0 9092:9092
 kubectl port-forward -n default service/my-release-kafka 32509:9092

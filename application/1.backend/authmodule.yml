@@ -44,19 +44,8 @@ spec:
           #   limits:
           #     memory: "128Mi"
           #     cpu: "100m"
-          env:
-            - name: SPRING_DATASOURCE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: spring-info
-                  key: db-source
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mariadb-secret
-                  key: username
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mariadb-secret
-                  key: password
+          envFrom:
+          - configMapRef:
+              name: spring-info
+          - secretRef:
+              name: mariadb-secret
